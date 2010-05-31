@@ -1,0 +1,113 @@
+<% content_for :tagline do %>
+  <%=link_to(:VeeJay, root_url)%>
+<% end %>
+<% content_for :instructions do %>
+  <p>
+    Please feel out one of the forms below
+  </p>
+<% end %>
+<% content_for :sidebar do %>
+  <h2>
+    Welcome to VeeJay.tv
+  </h2>
+  <p>
+    You can register 3 ways, via normal password creation, facebook connect or openid
+  </p>
+  <p>
+    <%=link_to("About Facebook Connect", "http://developers.facebook.com/connect.php", {:target => :_blank})%>
+  </p>
+  <p>
+    <%=link_to("About OpenID", "http://openid.net/", {:target => :_blank})%>
+  </p>
+<% end %>
+<%=error_messages_for(:basic_person, :header_message => "Fail")%>
+<%=error_messages_for(:person, :header_message => "Fail")%>
+<%=error_messages_for(:facebook_person, :header_message => "Fail")%>
+<div class="authentication_modes">
+  <div id="basic">
+    <p>
+    <%=link_to(image_tag("icon/home_plus.png") + "VeeJay", "#basic")%>
+    </p>
+    <% form_tag({:anchor => "basic"}) do %>
+      <ul>
+         <% fields_for(:basic_person) { |person| %>
+          <li>
+            <%=person.label(:email)%>
+            <%=person.text_field(:email)%>
+          </li>
+          <li>
+            <%=person.label(:nickname)%>
+            <%=person.text_field(:nickname)%>
+          </li>
+          <li>
+            <%=person.label(:password)%>
+            <%=person.password_field(:password)%>
+          </li>
+          <li>
+            <%=person.label(:password_confirmation)%>
+            <%=person.password_field(:password_confirmation)%>
+          </li>
+        <% } %>
+        <li>
+          <%= submit_tag("go")%>
+          or
+          <%=link_to(:login, login_url)%>
+        </li>
+      </ul>
+    <% end %>
+  </div>
+  <div id="facebook">
+    <p>
+    <%=link_to(image_tag("facebook.gif", {:height => 16}) + "Facebook", "#facebook")%>
+    </p>
+    <% form_tag({:anchor => "facebook"}, {:id => "facebook_register_form"}) do %>
+      <ul style="<%=(@facebook_person ? "" : "display: none;")%>">
+         <% fields_for(:facebook_person) { |person| %>
+          <li>
+            <%=person.hidden_field(:email, {:id => "proxied_email"})%>
+            <%=person.hidden_field(:facebook_user_id, {:id => "uid"})%>
+            <%=person.label(:nickname)%>
+            <%=person.text_field(:nickname)%>
+          </li>
+        <% } %>
+        <li>
+          <%= submit_tag("go")%>
+          or
+          <%=link_to(:login, login_url)%>
+        </li>
+      </ul>
+      <% unless @facebook_person %>
+        <fb:login-button onlogin="on_facebook_login();"></fb:login-button>
+      <% end %>
+    <% end %>
+  </div>
+  <div id="openid">
+    <p>
+    <%=link_to(image_tag("openid.gif") + "OpenID", "#openid")%>
+    </p>
+    <% form_tag({:anchor => "openid"}) do %>
+      <ul>
+        <% fields_for(:person) { |person| %>
+          <li>
+            <%=person.label(:identity_url)%>
+            <%=person.text_field(:identity_url, {:id => :openid_identifier})%>
+          </li>
+          <li>
+            <%=person.label(:email)%>
+            <%=person.text_field(:email)%>
+          </li>
+          <li>
+            <%=person.label(:nickname)%>
+            <%=person.text_field(:nickname)%>
+          </li>
+        <% } %>
+        <li>
+          <%= submit_tag("go")%>
+          or
+          <%=link_to(:login, login_url)%>
+        </li>
+      </ul>
+    <% end %>
+  </div>  
+</div>
+<%=render :partial => "shared/openid_selector"%>

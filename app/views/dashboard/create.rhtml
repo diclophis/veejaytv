@@ -1,0 +1,59 @@
+<% content_for :tagline do %>
+  Create your set
+<% end %>
+<% content_for :instructions do %>
+  To create your set search by Artist or Song, then drag clips to the set bucket on the right
+<% end %>
+<% content_for :sidebar do %>
+  <% form_tag(:search, {:id => "search"}) do %>
+    <ul>
+      <li>
+        <label>
+          Search by Artist or Song
+        </label>
+        <%=text_field_tag(:artist_or_song)%>
+        <%=submit_tag("Search", {:id => :search_button})%>
+      </li>
+      <li id="results_container">
+        <ul id="results">
+        </ul>
+      </li>
+    </ul>
+  <% end %>
+<% end %>
+<% form_tag(:create, {:id => "create"}) do %>
+  <%=error_messages_for(:episode)%>
+  <ul>
+    <% fields_for(:episode) { |episode| %>
+      <li>
+        <%=episode.label(:title)%>
+        <%=episode.text_field(:title)%>
+      </li>
+      <li>
+        <%=episode.label(:description)%>
+        <%=episode.text_area(:description, {:rows => 5})%>
+      </li>
+    <% } %>
+    <li>
+      <%=submit_tag("Create Set")%>
+      or <%=link_to(:return, dashboard_url)%>
+    </li>
+    <li>
+      <%=label_tag(:videos)%>
+      <% if @episode.videos.empty? then %>
+      <% else %>
+      <% end %>
+      <ul id="drop" class="videos">
+        <% @episode.videos.each { |video| %>
+          <%=render({:partial => "shared/remote_video", :locals => {:remote_video => video.remote_video, :comment => video.comment}})%>
+        <% } %>
+      </ul>
+    </li>
+    <!--
+    <li>
+      <%=submit_tag("Create Set")%>
+      or <%=link_to(:return, dashboard_url)%>
+    </li>
+    -->
+  </ul>
+<% end %>

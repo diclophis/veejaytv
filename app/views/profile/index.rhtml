@@ -1,0 +1,40 @@
+<% content_for :tagline do %>
+  VeeJay <%=link_to(@person.nickname, profile_url(@person)) %>'s channel
+  <%=link_to(image_tag("icon/feed.png"), sets_url(@person))%>
+<% end %>
+<% content_for :instructions do %>
+  Watch or Subscribe to this VeeJay's sets
+<% end %>
+<% content_for :sidebar do %>
+  <ul>
+    <li>
+      <table>
+        <tr>
+          <td>
+            <%=image_tag(@person.gravatar_url)%>
+          </td>
+          <td class="puff">
+            <p>
+              <% unless @person.biography.blank? %>
+                <%=h(@person.biography)%>
+                <br/>
+              <% end %>
+              <%=link_to(:subscribe, subscribe_url(@person)) %>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+<% end %>
+<% if @episodes.empty? then %>
+  <h2>
+    No Sets
+  </h2>
+<% else %>
+  <ul>
+    <% @episodes.each { |episode| %>
+      <%=render({:partial => "shared/episode", :locals => {:episode => episode, :editable => false, :url => episode_url(*episode.to_param), :nickname => false}})%>
+    <% } %>
+  </ul>
+<% end %>

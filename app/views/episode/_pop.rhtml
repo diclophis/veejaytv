@@ -1,0 +1,43 @@
+<div id="pop">
+  <ul>
+    <% if @video then %>
+      <li>
+        <h3>
+          Now...
+          "<%=@video.title%>"
+        </h3>
+      </li>
+    <% end %>
+    <% if @artist then %>
+      <li>
+        <h4>
+          <% if @artist.website.blank? then %>
+            <%=@artist.name%>
+          <% else %>
+            <%=link_to(@artist.name, @artist.website)%>
+          <% end %>
+        </h4>
+      </li>
+    <% end %>
+    <% if @lyrics then %>
+      <li>
+          <pre id="lyrics"><%=@lyrics%></pre>
+      </li>
+    <% end %>
+    <% if @last_release then %>
+      <li>
+        last release
+        "<%=@last_release.title%>"
+        on
+        <%=@last_release.released_on%>
+      </li>
+    <% end %>
+    <% if @artist then %>
+      <li>
+        <% @artist.categories.each { |category| %>
+          <%=category.name %>
+        <% } %>
+      </li>
+    <% end %>
+  </ul>
+</div>

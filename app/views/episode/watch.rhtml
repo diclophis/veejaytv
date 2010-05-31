@@ -1,0 +1,64 @@
+<% content_for :tagline do %>
+  <%=link_to(@episode.title, episode_url(*@episode.to_param))%>
+  by
+  <%=link_to(@episode.person.nickname, profile_url(@episode.person))%>
+<% end %>
+<% content_for :extra do %>
+  <%=rating_stars(@episode, current_person)%>
+<% end %>
+<% content_for :sidebar do %>
+  <ul id="pops">
+    <% @episode.videos.each { |video| %>
+      <li class="pop" id="pop_<%=video.remote_video.remote_id%>" style="display: none;">
+        <% if @artists[video.remote_video.title] then %>
+          <h3>
+            <%=video.remote_video.title%>
+            -
+            <% if @artists[video.remote_video.title].website.blank? then %>
+              <%=@artists[video.remote_video.title].name%>
+            <% else %>
+              <%=link_to(@artists[video.remote_video.title].name, @artists[video.remote_video.title].website)%>
+            <% end %>
+          </h3>
+        <% else %>
+          <h3>
+            <%=video.remote_video.title%>
+          </h3>
+        <% end %>
+
+        <% if video.comment.blank? then %>
+        <% else %>
+          <p>
+            <%=h(video.comment)%>
+          </p>
+        <% end %>
+        <% if @lyrics[video.remote_video.title] then %>
+          <pre><%=@lyrics[video.remote_video.title]%></pre>
+        <% end %>
+      </li>
+    <% } %>
+  </ul>
+<% end %>
+<%=render({:partial => "shared/player"})%>
+  <% if @episode.description.blank? then %>
+  <% else %>
+    <div class="quote">
+      <div class="quoted">
+        <p>
+          <%=@episode.description.textilize%>
+          <br/>
+          <br/>
+          - <%=link_to(@episode.person.nickname, profile_url(@episode.person))%>
+        </p>
+      </div>
+    </div>
+  <% end %>
+<ul class="grid">
+  <% @episode.videos.each { |video| %>
+    <li class="video" id="video_<%=video.remote_video.remote_id%>">
+      <%=link_to(image_tag(video.remote_video.image_url, {:width => "120"}), "#", {:title => video.remote_video.title})%>
+    </li>
+  <% } %>
+</ul>
+
+<div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/veejaytv/embed.js"></script><noscript><a href="http://veejaytv.disqus.com/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>

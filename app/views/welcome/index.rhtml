@@ -1,0 +1,55 @@
+<% content_for :tagline do %>
+  VeeJay.tv - What MTV used to be...
+  <%=link_to(image_tag("icon/feed.png"), rss_url)%>
+<% end %>
+<% content_for :instructions do %>
+  <table class="stranger_only" style="display: none;">
+    <tr>
+      <td>
+        <%=link_to(image_tag("http://risingcode.com/button/REGISTER"), register_url)%>
+      </td>
+      <td class="puff">
+        <h3>
+          and start your own mixtape!
+        </h3>
+      </td>
+    </tr>
+  </table>
+<% end %>
+<% content_for :sidebar do %>
+  <h2>
+    Recently Created Sets
+  </h2>
+  <ul>
+    <% @recent_episodes.each { |episode| %>
+      <%=render({:partial => "shared/episode", :locals => {:episode => episode, :editable => false, :url => episode_url(*episode.to_param), :nickname => true}})%>
+    <% } %>
+  </ul>
+  <%=will_paginate(@recent_episodes)%>
+<% end %>
+<% if @episode then %>
+  <h2>
+    <%=link_to(@episode.title, episode_url(*@episode.to_param))%>
+  </h2>
+  <%=render({:partial => "shared/player"})%>
+  <% if @episode.description.blank? then %>
+  <% else %>
+    <div class="quote">
+      <div class="quoted">
+        <p>
+          <%=@episode.description.textilize%>
+          <br/>
+          <br/>
+          - <%=link_to(@episode.person.nickname, profile_url(@episode.person))%>
+        </p>
+      </div>
+    </div>
+  <% end %>
+  <ul class="grid">
+    <% @episode.videos.each { |video| %>
+      <li class="video" id="video_<%=video.remote_video.remote_id%>">
+        <%=link_to(image_tag(video.remote_video.image_url, {:width => "120"}), "#", {:title => video.remote_video.title})%>
+      </li>
+    <% } %>
+  </ul>
+<% end %>

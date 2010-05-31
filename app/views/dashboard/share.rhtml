@@ -1,0 +1,67 @@
+<% content_for :tagline do %>
+  Share <%=link_to(@episode.title, episode_url(*@episode.to_param))%>
+<% end %>
+<% content_for :instructions do %>
+  You can use the code on the right, or send the set by email to any of your friends.
+  Or you can <%=link_to("return to your dashboard", dashboard_url)%>
+<% end %>
+<% content_for :sidebar do %>
+  <% form_tag(:share) do %>
+    <ul id="share_tabs" class="tabs">  
+      <li class="tab">
+        <%=link_to(image_tag("icon/screwdriver.png") + "&nbsp;Basic", "#one")%>
+      </li>  
+      <li class="tab">
+        <%=link_to(image_tag("icon/gear.png") + "&nbsp;Advanced", "#two")%>
+      </li>  
+    </ul>  
+    <div id="one">
+      <ul>
+        <li>
+          <label>
+            URL of set
+          </label>
+          <p>
+            This set has its own URL that you can use anywhere.
+          </p>
+          <%=text_area_tag(:share, episode_url(*@episode.to_param), {:rows => 3, :class => "copypaste"})%>
+        </li>
+      <ul>
+    </div>  
+    <div id="two">
+      <ul>
+        <li>
+          <%=label_tag("widget embed code")%>
+          <%=text_area_tag(:share, h("<script>coming soon...</script>"), {:rows => 5, :class => "copypaste"})%>
+        </li>
+      </ul>
+    </div>  
+  <% end %>
+<% end %>
+<% form_tag(:share, {:id => :share_form}) do %>
+  <ul>
+    <li id="autocomplete-list" class="input-text">
+      <%=label_tag("emails of people to share with seperated by a comma")%>
+      <input type="text" value="" id="emails" name="emails"/>
+      <div id="autocomplete">
+        <div class="default">Type the emails of people you want ot share with</div> 
+        <ul class="feed">
+          <% @good_emails.each { |good_email| %>
+            <li value="<%=h("#{good_email.name} #{good_email.address}")%>">
+              <%=h("#{good_email.name} #{good_email.address}")%>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </li>
+    <li>
+      <%=label_tag("message")%>
+      <%=text_area_tag(:message, params[:message], {:rows => 5})%>
+    </li>
+    <li>
+      <%=submit_tag("Share Set")%>
+      or
+      <%=link_to(:return, dashboard_url)%>
+    </li>
+  </ul>
+<% end %>

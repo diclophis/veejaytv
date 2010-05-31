@@ -1,0 +1,77 @@
+<% content_for :tagline do %>
+  Dashboard
+<% end %>
+<% content_for :instructions do %>
+  <table>
+    <tr>
+      <td>
+        <%=link_to(image_tag("http://risingcode.com/button/CREATE"), create_url)%>
+      </td>
+      <td class="puff">
+        <h3>
+          a new set.
+        </h3>
+      </td>
+    </tr>
+  </table>
+<% end %>
+<% content_for :sidebar do %>
+  <h2>
+    My Info
+  </h2>
+  <% form_tag do %>
+    <%=error_messages_for(:current_person)%>
+    <ul>
+      <% fields_for(:current_person) { |person| %>
+        <li>
+          <label>
+            Tell everyone a little about yourself
+          </label>
+          <%=person.text_area(:biography, {:rows => 5})%>
+        </li>
+      <% } %>
+      <li>
+        <%= submit_tag("Update")%>
+      </li>
+    </ul>
+  <% end %>
+  <% unless current_person.friends_by_me.empty? %>
+    <div id="subscriptions">
+      <h3>
+        My Subscriptions
+      </h3>
+      <ul>
+        <li>
+          <% current_person.friends_by_me.each { |friend| %>
+            <table>
+              <tr>
+                <td>
+                  <%=image_tag(friend.gravatar_url)%>
+                </td>
+                <td class="puff">
+                  <%=link_to(friend.nickname, profile_url(friend))%>
+                </td>
+              </tr>
+            </table>
+          <% } %>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
+<% if @episodes.empty? then %>
+  <h2>
+    No Sets... why don't you
+    <%=link_to("create", create_url)%>
+    one already!
+  </h2>
+<% else %>
+  <h2>
+    Edit My Sets
+  </h2>
+  <ul>
+    <% @episodes.each { |episode| %>
+      <%=render({:partial => "shared/episode", :locals => {:episode => episode, :editable => true, :url => edit_url(episode.id), :nickname => false}})%>
+    <% } %>
+  </ul>
+<% end %>

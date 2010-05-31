@@ -1,0 +1,56 @@
+<% content_for :tagline do %>
+  Editing an existing set
+<% end %>
+<% content_for :instructions do %>
+  Update this set using the form below.
+  You can also <%=link_to("share this set", share_url(*@episode.to_param))%>.
+  Or you can <%=link_to("return to your dashboard", dashboard_url)%>.
+<% end %>
+<% content_for :sidebar do %>
+  <% form_tag(:search, {:id => "search"}) do %>
+    <label>
+      Search by Artist or Song
+    </label>
+    <%=text_field_tag(:artist_or_song)%>
+    <%=submit_tag(:go, {:id => :search_button})%>
+    <div id="results_container">
+      <ul id="results">
+        <li></li>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
+<% form_tag(edit_url(@episode.id)) do %>
+  <%=error_messages_for(:episode)%>
+  <ul>
+    <% fields_for(:episode) { |episode| %>
+      <li>
+        <%=episode.label(:title)%>
+        <%=episode.text_field(:title)%>
+      </li>
+      <li>
+        <%=episode.label(:description)%>
+        <%=episode.text_area(:description, {:rows => 5})%>
+      </li>
+    <% } %>
+    <li>
+      <%=submit_tag("Update Set")%>
+      or <%=link_to(:return, dashboard_url)%>
+      <% if @episode.valid? then %>
+      or <%=link_to("share", share_url(*@episode.to_param))%>
+      <% end %>
+      or <%=link_to("delete", "#")%>
+    </li>
+    <li>
+      <%=label_tag(:videos)%>
+      <% if @episode.videos.empty? then %>
+      <% else %>
+      <% end %>
+      <ul id="drop" class="videos">
+        <% @episode.videos.each { |video| %>
+          <%=render({:partial => "shared/remote_video", :locals => {:remote_video => video.remote_video, :comment => video.comment}})%>
+        <% } %>
+      </ul>
+    </li>
+  </ul>
+<% end %>
